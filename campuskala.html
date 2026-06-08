@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusKala — The Student Marketplace</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Nunito:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --saffron:    #F97316;
+      --marigold:   #FBBF24;
+      --forest:     #16A34A;
+      --sage:       #86EFAC;
+      --cream:      #FFFBF0;
+      --bark:       #1C1208;
+      --charcoal:   #2D2416;
+      --muted:      #8C7B5E;
+      --card-bg:    #FFF8EE;
+      --border:     rgba(249,115,22,0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--cream);
+      color: var(--charcoal);
+      overflow-x: hidden;
+    }
+
+    /* ── Texture overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='%23F97316' opacity='0.06'/%3E%3Ccircle cx='0' cy='0' r='1' fill='%23F97316' opacity='0.06'/%3E%3Ccircle cx='60' cy='0' r='1' fill='%23F97316' opacity='0.06'/%3E%3Ccircle cx='0' cy='60' r='1' fill='%23F97316' opacity='0.06'/%3E%3Ccircle cx='60' cy='60' r='1' fill='%23F97316' opacity='0.06'/%3E%3C/svg%3E");
+    }
+
+    /* ── Animated gradient hero ── */
+    .hero-bg {
+      background:
+        radial-gradient(ellipse 70% 60% at 15% 20%, rgba(251,191,36,0.22) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 50% at 85% 75%, rgba(249,115,22,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 70% at 50% 100%, rgba(22,163,74,0.10) 0%, transparent 60%),
+        var(--cream);
+    }
+
+    /* ── Rangoli border decoration ── */
+    .rangoli-border {
+      border-image: repeating-linear-gradient(90deg,
+        var(--saffron) 0px, var(--saffron) 8px,
+        var(--marigold) 8px, var(--marigold) 16px,
+        var(--forest) 16px, var(--forest) 24px,
+        transparent 24px, transparent 32px
+      ) 4;
+      border-width: 4px;
+      border-style: solid;
+    }
+
+    /* ── Nav ── */
+    .nav-glass {
+      background: rgba(255, 251, 240, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(249,115,22,0.15);
+    }
+
+    .nav-link {
+      position: relative;
+      padding-bottom: 2px;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute; left: 0; bottom: 0;
+      width: 0; height: 2px;
+      background: var(--saffron);
+      transition: width 0.3s ease;
+      border-radius: 2px;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ── Cards ── */
+    .kala-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(249,115,22,0.14);
+      box-shadow: 0 2px 16px rgba(249,115,22,0.06), 0 1px 4px rgba(0,0,0,0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .kala-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(249,115,22,0.12), 0 2px 8px rgba(0,0,0,0.06);
+      border-color: rgba(249,115,22,0.35);
+    }
+
+    /* ── Tag pill ── */
+    .tag {
+      background: rgba(249,115,22,0.10);
+      border: 1px solid rgba(249,115,22,0.25);
+      color: var(--saffron);
+    }
+    .tag-green {
+      background: rgba(22,163,74,0.10);
+      border: 1px solid rgba(22,163,74,0.25);
+      color: var(--forest);
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--saffron);
+      background: rgba(249,115,22,0.10);
+      border: 1px solid rgba(249,115,22,0.28);
+      border-radius: 4px;
+      padding: 3px 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── Btn primary ── */
+    .btn-primary {
+      background: var(--saffron);
+      color: white;
+      font-weight: 700;
+      border-radius: 12px;
+      padding: 0.7rem 1.6rem;
+      font-size: 0.9rem;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 18px rgba(249,115,22,0.30);
+    }
+    .btn-primary:hover { background: #EA6A0C; transform: translateY(-1px); }
+    .btn-primary:active { transform: scale(0.97); }
+
+    .btn-secondary {
+      background: white;
+      color: var(--charcoal);
+      font-weight: 600;
+      border-radius: 12px;
+      padding: 0.7rem 1.6rem;
+      font-size: 0.9rem;
+      border: 1.5px solid rgba(249,115,22,0.25);
+      transition: border-color 0.2s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-secondary:hover { border-color: var(--saffron); color: var(--saffron); }
+
+    /* ── Animations ── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-8px); }
+    }
+    @keyframes spin-slow {
+      to { transform: rotate(360deg); }
+    }
+    .animate-fade-up   { animation: fade-up 0.65s ease both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .float   { animation: float 4s ease-in-out infinite; }
+    .float-2 { animation: float 5s ease-in-out infinite 1s; }
+    .float-3 { animation: float 6s ease-in-out infinite 0.5s; }
+    .spin-slow { animation: spin-slow 18s linear infinite; }
+
+    /* ── Marquee ── */
+    .marquee-track {
+      display: flex;
+      gap: 2rem;
+      animation: marquee 22s linear infinite;
+      width: max-content;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── Product card image placeholder ── */
+    .product-img {
+      height: 140px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Avatar ── */
+    .avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Badge ── */
+    .badge-live {
+      background: #DCFCE7;
+      color: #15803D;
+      border: 1px solid #86EFAC;
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 100px;
+      padding: 2px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Input ── */
+    .kala-input {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(249,115,22,0.20);
+      background: white;
+      color: var(--charcoal);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.875rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .kala-input:focus {
+      border-color: var(--saffron);
+      box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+    }
+    .kala-input::placeholder { color: #B8A88A; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb { background: #F4A35C; border-radius: 3px; }
+
+    /* ── Divider ── */
+    .divider {
+      height: 3px;
+      background: repeating-linear-gradient(90deg, var(--saffron) 0, var(--saffron) 12px, var(--marigold) 12px, var(--marigold) 24px, var(--forest) 24px, var(--forest) 36px, transparent 36px, transparent 48px);
+      border-radius: 2px;
+    }
+
+    /* ── How it works step ── */
+    .step-num {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 2px dashed var(--saffron);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--saffron);
+      flex-shrink: 0;
+    }
+
+    /* ── Section alt bg ── */
+    .alt-bg {
+      background: linear-gradient(180deg, #FFF8EE 0%, #FFF1DA 100%);
+    }
+
+    .dark-section {
+      background: var(--bark);
+      color: var(--cream);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════
+       NAV
+  ══════════════════════════════════ -->
+  <header class="nav-glass fixed top-0 inset-x-0 z-50 shadow-sm">
+    <nav class="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between gap-4 relative z-10">
+
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2.5 group" aria-label="CampusKala Home">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-xl shadow-md" style="background:linear-gradient(135deg,#F97316,#FBBF24);">
+          🪔
+        </div>
+        <span style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.2rem;color:var(--bark);">
+          Campus<span style="color:var(--saffron);">Kala</span>
+        </span>
+        <span class="badge-live hidden sm:inline-flex">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span> LIVE
+        </span>
+      </a>
+
+      <!-- Desktop links -->
+      <ul class="hidden md:flex items-center gap-7 text-sm font-semibold" style="color:var(--muted);">
+        <li><a href="#how"       class="nav-link hover:text-bark transition-colors" style="--tw-text-opacity:1;">How It Works</a></li>
+        <li><a href="#listings"  class="nav-link hover:text-bark transition-colors">Browse</a></li>
+        <li><a href="#sellers"   class="nav-link hover:text-bark transition-colors">Sell</a></li>
+        <li><a href="#community" class="nav-link hover:text-bark transition-colors">Community</a></li>
+        <li><a href="#contact"   class="nav-link hover:text-bark transition-colors">Contact</a></li>
+      </ul>
+
+      <div class="flex items-center gap-3">
+        <a href="#listings" class="hidden sm:inline-flex btn-secondary text-sm px-4 py-2">Browse Market</a>
+        <a href="#sellers"  class="btn-primary text-sm px-4 py-2">Start Selling 🛍️</a>
+        <!-- Hamburger -->
+        <button id="menu-btn" class="md:hidden w-9 h-9 flex flex-col justify-center gap-1.5 items-end">
+          <span class="w-6 h-0.5 rounded" style="background:var(--charcoal);"></span>
+          <span class="w-4 h-0.5 rounded" style="background:var(--charcoal);"></span>
+          <span class="w-5 h-0.5 rounded" style="background:var(--charcoal);"></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t px-6 py-5 space-y-3 text-sm font-semibold" style="border-color:rgba(249,115,22,0.12);background:rgba(255,251,240,0.97);">
+      <a href="#how"       class="block py-1.5 hover:text-orange-500 transition-colors" onclick="closeMobileMenu()">How It Works</a>
+      <a href="#listings"  class="block py-1.5 hover:text-orange-500 transition-colors" onclick="closeMobileMenu()">Browse</a>
+      <a href="#sellers"   class="block py-1.5 hover:text-orange-500 transition-colors" onclick="closeMobileMenu()">Sell</a>
+      <a href="#community" class="block py-1.5 hover:text-orange-500 transition-colors" onclick="closeMobileMenu()">Community</a>
+      <a href="#contact"   class="block py-1.5 hover:text-orange-500 transition-colors" onclick="closeMobileMenu()">Contact</a>
+    </div>
+  </header>
+
+
+  <!-- ══════════════════════════════════
+       HERO
+  ══════════════════════════════════ -->
+  <section class="hero-bg min-h-screen flex items-center justify-center pt-16 pb-16 px-5 sm:px-8 relative overflow-hidden" id="hero">
+
+    <!-- Decorative floating elements -->
+    <div class="absolute top-28 right-12 float text-5xl opacity-60 pointer-events-none select-none hidden lg:block">🎨</div>
+    <div class="absolute top-48 left-8 float-2 text-4xl opacity-50 pointer-events-none select-none hidden lg:block">☕</div>
+    <div class="absolute bottom-32 right-24 float-3 text-5xl opacity-55 pointer-events-none select-none hidden lg:block">📚</div>
+    <div class="absolute bottom-24 left-16 float text-3xl opacity-45 pointer-events-none select-none hidden lg:block">🧵</div>
+
+    <!-- Rotating rangoli bg shape -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none opacity-[0.035] spin-slow hidden lg:block">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,10 120,80 190,80 135,120 155,190 100,150 45,190 65,120 10,80 80,80" fill="none" stroke="#F97316" stroke-width="1.5"/>
+        <circle cx="100" cy="100" r="85" fill="none" stroke="#FBBF24" stroke-width="0.8" stroke-dasharray="6 4"/>
+        <circle cx="100" cy="100" r="50" fill="none" stroke="#16A34A" stroke-width="0.6" stroke-dasharray="3 6"/>
+      </svg>
+    </div>
+
+    <div class="max-w-5xl w-full text-center relative z-10">
+
+      <!-- University badge -->
+      <div class="animate-fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-xs font-semibold" style="background:white;border:1px solid rgba(249,115,22,0.2);color:var(--muted);box-shadow:0 2px 12px rgba(249,115,22,0.08);">
+        <span>🏛️</span>
+        <span style="color:var(--charcoal);">Exclusive to</span>
+        <span style="color:var(--saffron);font-family:'Syne',sans-serif;">Christ University</span>
+        <span class="badge-live">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span> Open
+        </span>
+      </div>
+
+      <h1 class="animate-fade-up delay-1 mb-5 leading-tight" style="font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(2.8rem,8vw,5.5rem);color:var(--bark);">
+        Your Campus Bazaar,<br/>
+        <span style="color:var(--saffron);">Open 365 Days</span> 🪔
+      </h1>
+
+      <p class="animate-fade-up delay-2 mb-10 text-lg leading-relaxed max-w-2xl mx-auto" style="color:var(--muted);">
+        CampusKala connects student-led businesses with their university community. From handmade crafts and vintage books to tutoring and design services — the college stall experience, but always on.
+      </p>
+
+      <div class="animate-fade-up delay-3 flex flex-wrap gap-3 justify-center mb-12">
+        <a href="#listings" class="btn-primary">Explore the Market 🛒</a>
+        <a href="#sellers"  class="btn-secondary">I Want to Sell ✨</a>
+      </div>
+
+      <!-- Stats row -->
+      <div class="animate-fade-up delay-4 flex flex-wrap justify-center gap-6 sm:gap-10">
+        <div class="text-center">
+          <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;color:var(--saffron);">200+</div>
+          <div class="text-xs font-semibold" style="color:var(--muted);">Active Sellers</div>
+        </div>
+        <div style="width:1px;background:rgba(249,115,22,0.18);" class="hidden sm:block"></div>
+        <div class="text-center">
+          <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;color:var(--saffron);">1,400+</div>
+          <div class="text-xs font-semibold" style="color:var(--muted);">Listings Live</div>
+        </div>
+        <div style="width:1px;background:rgba(249,115,22,0.18);" class="hidden sm:block"></div>
+        <div class="text-center">
+          <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;color:var(--forest);">100%</div>
+          <div class="text-xs font-semibold" style="color:var(--muted);">Student-to-Student</div>
+        </div>
+        <div style="width:1px;background:rgba(249,115,22,0.18);" class="hidden sm:block"></div>
+        <div class="text-center">
+          <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;color:var(--saffron);">0%</div>
+          <div class="text-xs font-semibold" style="color:var(--muted);">Platform Fee</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Marquee band ── -->
+  <div class="divider"></div>
+  <div class="overflow-hidden py-4" style="background:#FFF1DA;">
+    <div class="marquee-track text-sm font-semibold" style="color:var(--muted);">
+      <span>📦 Vintage Study Books</span><span>🎨 Handmade Art Prints</span><span>☕ Room-Brewed Coffee</span><span>💻 Coding Tutoring</span><span>🧶 Crocheted Merch</span><span>🎸 Guitar Lessons</span><span>📷 Event Photography</span><span>🧁 Home-Baked Snacks</span><span>🖥️ UI/UX Design Services</span><span>🌿 Succulents &amp; Plants</span><span>📦 Vintage Study Books</span><span>🎨 Handmade Art Prints</span><span>☕ Room-Brewed Coffee</span><span>💻 Coding Tutoring</span><span>🧶 Crocheted Merch</span><span>🎸 Guitar Lessons</span><span>📷 Event Photography</span><span>🧁 Home-Baked Snacks</span><span>🖥️ UI/UX Design Services</span><span>🌿 Succulents &amp; Plants</span>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+
+  <!-- ══════════════════════════════════
+       HOW IT WORKS
+  ══════════════════════════════════ -->
+  <section id="how" class="py-24 px-5 sm:px-8 alt-bg relative z-10">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="text-center mb-16">
+        <span class="section-label">How It Works</span>
+        <h2 class="mt-3" style="font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3rem);color:var(--bark);">
+          Simple. Local. <span style="color:var(--saffron);">Student-Powered.</span>
+        </h2>
+        <p class="mt-3 max-w-lg mx-auto text-base" style="color:var(--muted);">Whether you're buying or selling, CampusKala works entirely within your university — verified, trusted, and community-first.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-16 items-start">
+
+        <!-- FOR BUYERS -->
+        <div>
+          <div class="flex items-center gap-3 mb-8">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:rgba(249,115,22,0.12);">🛒</div>
+            <h3 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--bark);">For Buyers</h3>
+          </div>
+          <div class="space-y-7">
+            <div class="flex gap-4 items-start">
+              <div class="step-num">1</div>
+              <div>
+                <div class="font-bold mb-1" style="color:var(--charcoal);">Sign up with your .edu email</div>
+                <div class="text-sm leading-relaxed" style="color:var(--muted);">Only Christ University students can join. Your college email verifies your identity — no imposters, no outsiders.</div>
+              </div>
+            </div>
+            <div class="flex gap-4 items-start">
+              <div class="step-num">2</div>
+              <div>
+                <div class="font-bold mb-1" style="color:var(--charcoal);">Browse listings by category</div>
+                <div class="text-sm leading-relaxed" style="color:var(--muted);">Filter by products, services, events, or free giveaways. Search for exactly what you need — from notes to noodles.</div>
+              </div>
+            </div>
+            <div class="flex gap-4 items-start">
+              <div class="step-num">3</div>
+              <div>
+                <div class="font-bold mb-1" style="color:var(--charcoal);">Connect &amp; pick up on campus</div>
+                <div class="text-sm leading-relaxed" style="color:var(--muted);">Message the seller directly. Arrange pickup at the food court, library, or hostel — all within campus.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOR SELLERS -->
+        <div>
+          <div class="flex items-center gap-3 mb-8">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:rgba(22,163,74,0.12);">🏪</div>
+            <h3 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--bark);">For Sellers</h3>
+          </div>
+          <div class="space-y-7">
+            <div class="flex gap-4 items-start">
+              <div class="step-num" style="border-color:var(--forest);color:var(--forest);">1</div>
+              <div>
+                <div class="font-bold mb-1" style="color:var(--charcoal);">Create your student storefront</div>
+                <div class="text-sm leading-relaxed" style="color:var(--muted);">Set up your shop profile in minutes — add a bio, your department, and what you're selling or offering.</div>
+              </div>
+            </div>
+            <div class="flex gap-4 items-start">
+              <div class="step-num" style="border-color:var(--forest);color:var(--forest);">2</div>
+              <div>
+                <div class="font-bold mb-1" style="color:var(--charcoal);">List products or services</div>
+                <div class="text-sm leading-relaxed" style="color:var(--muted);">Post your handmade items, second-hand goods, skill-based services, or recurring offerings — keep your stall open all year.</div>
+              </div>
+            </div>
+            <div class="flex gap-4 items-start">
+              <div class="step-num" style="border-color:var(--forest);color:var(--forest);">3</div>
+              <div>
+                <div class="font-bold mb-1" style="color:var(--charcoal);">Earn, grow, and build your brand</div>
+                <div class="text-sm leading-relaxed" style="color:var(--muted);">Get reviews, build a loyal customer base among your peers, and grow your entrepreneurship journey right from your hostel room.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       BROWSE LISTINGS
+  ══════════════════════════════════ -->
+  <section id="listings" class="py-24 px-5 sm:px-8 relative z-10" style="background:var(--cream);">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+        <div>
+          <span class="section-label">Browse</span>
+          <h2 class="mt-2" style="font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.8rem,4vw,2.6rem);color:var(--bark);">What's on the Market 🛍️</h2>
+        </div>
+        <a href="#" class="btn-secondary text-sm self-start sm:self-auto">View All Listings →</a>
+      </div>
+
+      <!-- Category filters -->
+      <div class="flex flex-wrap gap-2 mb-10">
+        <button class="btn-primary text-xs px-3 py-1.5">All</button>
+        <button class="btn-secondary text-xs px-3 py-1.5" style="padding:0.375rem 0.75rem;">📦 Products</button>
+        <button class="btn-secondary text-xs px-3 py-1.5" style="padding:0.375rem 0.75rem;">🔧 Services</button>
+        <button class="btn-secondary text-xs px-3 py-1.5" style="padding:0.375rem 0.75rem;">📚 Books &amp; Notes</button>
+        <button class="btn-secondary text-xs px-3 py-1.5" style="padding:0.375rem 0.75rem;">🎨 Handmade</button>
+        <button class="btn-secondary text-xs px-3 py-1.5" style="padding:0.375rem 0.75rem;">🍕 Food &amp; Drinks</button>
+        <button class="btn-secondary text-xs px-3 py-1.5" style="padding:0.375rem 0.75rem;">💡 Tutoring</button>
+      </div>
+
+      <!-- Product grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Card 1 -->
+        <div class="kala-card rounded-2xl p-5 cursor-pointer">
+          <div class="product-img" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">🎨</div>
+          <div class="flex gap-2 flex-wrap mb-2">
+            <span class="tag px-2 py-0.5 rounded-full text-xs font-semibold">Handmade</span>
+            <span class="tag-green px-2 py-0.5 rounded-full text-xs font-semibold">In Stock</span>
+          </div>
+          <h4 class="font-bold text-sm mb-1" style="color:var(--bark);">Mandala Art Print — A4</h4>
+          <p class="text-xs mb-3" style="color:var(--muted);">Hand-drawn, perfect for hostel room walls. Limited copies!</p>
+          <div class="flex items-center justify-between">
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--saffron);font-size:1.1rem;">₹120</span>
+            <div class="flex items-center gap-1.5">
+              <div class="avatar text-xs" style="background:#FDE68A;color:#92400E;">P</div>
+              <span class="text-xs font-semibold" style="color:var(--muted);">Priya, CSE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="kala-card rounded-2xl p-5 cursor-pointer">
+          <div class="product-img" style="background:linear-gradient(135deg,#DCFCE7,#BBF7D0);">📚</div>
+          <div class="flex gap-2 flex-wrap mb-2">
+            <span class="tag px-2 py-0.5 rounded-full text-xs font-semibold">Books</span>
+            <span class="tag-green px-2 py-0.5 rounded-full text-xs font-semibold">Available</span>
+          </div>
+          <h4 class="font-bold text-sm mb-1" style="color:var(--bark);">DS &amp; Algorithms — CHRIST Edition</h4>
+          <p class="text-xs mb-3" style="color:var(--muted);">3rd year book bundle, good condition. Exam notes included.</p>
+          <div class="flex items-center justify-between">
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--saffron);font-size:1.1rem;">₹250</span>
+            <div class="flex items-center gap-1.5">
+              <div class="avatar text-xs" style="background:#BBF7D0;color:#166534;">A</div>
+              <span class="text-xs font-semibold" style="color:var(--muted);">Arjun, IT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="kala-card rounded-2xl p-5 cursor-pointer">
+          <div class="product-img" style="background:linear-gradient(135deg,#FEE2E2,#FECACA);">🧁</div>
+          <div class="flex gap-2 flex-wrap mb-2">
+            <span class="tag px-2 py-0.5 rounded-full text-xs font-semibold">Food</span>
+            <span class="tag-green px-2 py-0.5 rounded-full text-xs font-semibold">Pre-Order</span>
+          </div>
+          <h4 class="font-bold text-sm mb-1" style="color:var(--bark);">Home-Baked Brownies — Box of 6</h4>
+          <p class="text-xs mb-3" style="color:var(--muted);">Dark chocolate, walnut. Baked fresh on Fridays. Hostel delivery.</p>
+          <div class="flex items-center justify-between">
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--saffron);font-size:1.1rem;">₹180</span>
+            <div class="flex items-center gap-1.5">
+              <div class="avatar text-xs" style="background:#FECACA;color:#9F1239;">S</div>
+              <span class="text-xs font-semibold" style="color:var(--muted);">Sneha, ECE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="kala-card rounded-2xl p-5 cursor-pointer">
+          <div class="product-img" style="background:linear-gradient(135deg,#EDE9FE,#DDD6FE);">💡</div>
+          <div class="flex gap-2 flex-wrap mb-2">
+            <span class="tag px-2 py-0.5 rounded-full text-xs font-semibold">Service</span>
+            <span class="tag-green px-2 py-0.5 rounded-full text-xs font-semibold">Taking Slots</span>
+          </div>
+          <h4 class="font-bold text-sm mb-1" style="color:var(--bark);">Python &amp; ML Tutoring — 1hr Session</h4>
+          <p class="text-xs mb-3" style="color:var(--muted);">Final year ML specialization. Evening batches, small groups.</p>
+          <div class="flex items-center justify-between">
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--saffron);font-size:1.1rem;">₹300/hr</span>
+            <div class="flex items-center gap-1.5">
+              <div class="avatar text-xs" style="background:#DDD6FE;color:#5B21B6;">R</div>
+              <span class="text-xs font-semibold" style="color:var(--muted);">Ravi, CSE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="kala-card rounded-2xl p-5 cursor-pointer">
+          <div class="product-img" style="background:linear-gradient(135deg,#E0F2FE,#BAE6FD);">📷</div>
+          <div class="flex gap-2 flex-wrap mb-2">
+            <span class="tag px-2 py-0.5 rounded-full text-xs font-semibold">Service</span>
+            <span class="tag-green px-2 py-0.5 rounded-full text-xs font-semibold">Available</span>
+          </div>
+          <h4 class="font-bold text-sm mb-1" style="color:var(--bark);">Event / Fest Photography</h4>
+          <p class="text-xs mb-3" style="color:var(--muted);">DSLR + edited gallery delivery. Tech fests, culturals, birthdays.</p>
+          <div class="flex items-center justify-between">
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--saffron);font-size:1.1rem;">₹500/event</span>
+            <div class="flex items-center gap-1.5">
+              <div class="avatar text-xs" style="background:#BAE6FD;color:#075985;">K</div>
+              <span class="text-xs font-semibold" style="color:var(--muted);">Karan, ME</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="kala-card rounded-2xl p-5 cursor-pointer">
+          <div class="product-img" style="background:linear-gradient(135deg,#FEF9C3,#FEF08A);">🧶</div>
+          <div class="flex gap-2 flex-wrap mb-2">
+            <span class="tag px-2 py-0.5 rounded-full text-xs font-semibold">Handmade</span>
+            <span class="tag-green px-2 py-0.5 rounded-full text-xs font-semibold">Custom Orders</span>
+          </div>
+          <h4 class="font-bold text-sm mb-1" style="color:var(--bark);">Crochet Keychains &amp; Plushies</h4>
+          <p class="text-xs mb-3" style="color:var(--muted);">Custom characters, college colors. 7-day delivery within campus.</p>
+          <div class="flex items-center justify-between">
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--saffron);font-size:1.1rem;">₹80 onwards</span>
+            <div class="flex items-center gap-1.5">
+              <div class="avatar text-xs" style="background:#FEF08A;color:#713F12;">D</div>
+              <span class="text-xs font-semibold" style="color:var(--muted);">Divya, BioTech</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="kala-card rounded-2xl p-5 cursor-pointer">
+          <div class="product-img" style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7);">🌿</div>
+          <div class="flex gap-2 flex-wrap mb-2">
+            <span class="tag px-2 py-0.5 rounded-full text-xs font-semibold">Products</span>
+            <span class="tag-green px-2 py-0.5 rounded-full text-xs font-semibold">In Stock</span>
+          </div>
+          <h4 class="font-bold text-sm mb-1" style="color:var(--bark);">Desk Succulents &amp; Potted Plants</h4>
+          <p class="text-xs mb-3" style="color:var(--muted);">Low-maintenance, hostel-friendly. Self-grown in campus garden.</p>
+          <div class="flex items-center justify-between">
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--saffron);font-size:1.1rem;">₹60</span>
+            <div class="flex items-center gap-1.5">
+              <div class="avatar text-xs" style="background:#DCFCE7;color:#14532D;">M</div>
+              <span class="text-xs font-semibold" style="color:var(--muted);">Meena, EnvSci</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="kala-card rounded-2xl p-5 cursor-pointer">
+          <div class="product-img" style="background:linear-gradient(135deg,#FDF2F8,#FCE7F3);">🖥️</div>
+          <div class="flex gap-2 flex-wrap mb-2">
+            <span class="tag px-2 py-0.5 rounded-full text-xs font-semibold">Service</span>
+            <span class="tag-green px-2 py-0.5 rounded-full text-xs font-semibold">Open</span>
+          </div>
+          <h4 class="font-bold text-sm mb-1" style="color:var(--bark);">Logo &amp; UI Design for Clubs</h4>
+          <p class="text-xs mb-3" style="color:var(--muted);">Figma mockups, social media kits. Trusted by 5+ college clubs.</p>
+          <div class="flex items-center justify-between">
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--saffron);font-size:1.1rem;">₹400+</span>
+            <div class="flex items-center gap-1.5">
+              <div class="avatar text-xs" style="background:#FCE7F3;color:#831843;">N</div>
+              <span class="text-xs font-semibold" style="color:var(--muted);">Nithya, CSE</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /grid -->
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       WHY CAMPUSKALA
+  ══════════════════════════════════ -->
+  <section class="py-24 px-5 sm:px-8 alt-bg relative z-10">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="text-center mb-14">
+        <span class="section-label">Why CampusKala</span>
+        <h2 class="mt-3" style="font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.8rem,4vw,2.8rem);color:var(--bark);">The Stall That Never<br/><span style="color:var(--saffron);">Packs Up</span></h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div class="kala-card rounded-2xl p-7">
+          <div class="text-3xl mb-4">🔒</div>
+          <h3 class="font-bold text-base mb-2" style="color:var(--bark);">University-Verified Only</h3>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">Every buyer and seller is a verified Christ University student. No strangers, no spam — a truly trusted campus circle.</p>
+        </div>
+
+        <div class="kala-card rounded-2xl p-7">
+          <div class="text-3xl mb-4">📅</div>
+          <h3 class="font-bold text-base mb-2" style="color:var(--bark);">Always Open, No Fest Needed</h3>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">College stalls last 3 days. Your CampusKala shop runs all 365 — even during exams, holidays, and sem breaks.</p>
+        </div>
+
+        <div class="kala-card rounded-2xl p-7">
+          <div class="text-3xl mb-4">💸</div>
+          <h3 class="font-bold text-base mb-2" style="color:var(--bark);">Zero Platform Fees</h3>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">We take nothing. 100% of what buyers pay goes directly to the student seller. We believe in peer-to-peer, not middlemen.</p>
+        </div>
+
+        <div class="kala-card rounded-2xl p-7">
+          <div class="text-3xl mb-4">🤝</div>
+          <h3 class="font-bold text-base mb-2" style="color:var(--bark);">Hyperlocal Pickup</h3>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">No shipping drama. Meet at the campus cafeteria, hostel block, or library gate. Campus is your delivery zone.</p>
+        </div>
+
+        <div class="kala-card rounded-2xl p-7">
+          <div class="text-3xl mb-4">⭐</div>
+          <h3 class="font-bold text-base mb-2" style="color:var(--bark);">Peer Reviews &amp; Ratings</h3>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">Build trust with genuine ratings from classmates. Good reviews help student businesses grow their campus reputation.</p>
+        </div>
+
+        <div class="kala-card rounded-2xl p-7">
+          <div class="text-3xl mb-4">📣</div>
+          <h3 class="font-bold text-base mb-2" style="color:var(--bark);">Fest Announcements</h3>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">When Blossoms or Spectrum happens, sellers can activate their physical stall mode and broadcast deals to their existing follower base.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       SELLER CTA
+  ══════════════════════════════════ -->
+  <section id="sellers" class="py-24 px-5 sm:px-8 relative z-10 overflow-hidden dark-section">
+
+    <!-- Background decoration -->
+    <div class="absolute inset-0 pointer-events-none opacity-5">
+      <div class="absolute top-8 left-8 text-[12rem] leading-none select-none">🪔</div>
+      <div class="absolute bottom-8 right-8 text-[10rem] leading-none select-none">🎨</div>
+    </div>
+
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      <span class="section-label" style="color:var(--marigold);background:rgba(251,191,36,0.12);border-color:rgba(251,191,36,0.3);">For Student Entrepreneurs</span>
+      <h2 class="mt-4 mb-5" style="font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.2rem);color:var(--cream);">
+        Turn Your Skill Into a<br/><span style="color:var(--marigold);">Campus Business</span> 🚀
+      </h2>
+      <p class="mb-10 text-lg leading-relaxed max-w-xl mx-auto" style="color:rgba(255,251,240,0.65);">
+        You already have the talent. CampusKala gives you the platform to sell it — products, services, or experiences — to 20,000+ students who are your neighbors.
+      </p>
+
+      <div class="grid sm:grid-cols-3 gap-5 mb-12">
+        <div class="rounded-2xl p-5 text-left" style="background:rgba(255,251,240,0.06);border:1px solid rgba(255,251,240,0.10);">
+          <div class="text-2xl mb-3">⏱️</div>
+          <div class="font-bold text-sm mb-1" style="color:var(--cream);">List in 5 minutes</div>
+          <div class="text-xs" style="color:rgba(255,251,240,0.55);">Add photos, price, description. Your listing goes live immediately.</div>
+        </div>
+        <div class="rounded-2xl p-5 text-left" style="background:rgba(255,251,240,0.06);border:1px solid rgba(255,251,240,0.10);">
+          <div class="text-2xl mb-3">📊</div>
+          <div class="font-bold text-sm mb-1" style="color:var(--cream);">Track your orders</div>
+          <div class="text-xs" style="color:rgba(255,251,240,0.55);">Simple dashboard to manage inquiries, completed orders, and earnings.</div>
+        </div>
+        <div class="rounded-2xl p-5 text-left" style="background:rgba(255,251,240,0.06);border:1px solid rgba(255,251,240,0.10);">
+          <div class="text-2xl mb-3">🌟</div>
+          <div class="font-bold text-sm mb-1" style="color:var(--cream);">Build your brand</div>
+          <div class="text-xs" style="color:rgba(255,251,240,0.55);">Collect reviews, grow followers, and become the go-to shop on campus.</div>
+        </div>
+      </div>
+
+      <a href="#contact" class="btn-primary text-base px-7 py-3.5" style="background:var(--marigold);color:var(--bark);box-shadow:0 6px 24px rgba(251,191,36,0.30);">
+        Open My Shop Now 🛍️
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       TESTIMONIALS / COMMUNITY
+  ══════════════════════════════════ -->
+  <section id="community" class="py-24 px-5 sm:px-8 relative z-10" style="background:var(--cream);">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="text-center mb-14">
+        <span class="section-label">Community</span>
+        <h2 class="mt-3" style="font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.8rem,4vw,2.8rem);color:var(--bark);">What Christites Are Saying 💬</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <div class="kala-card rounded-2xl p-7">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="avatar" style="background:#FDE68A;color:#92400E;font-size:1rem;">A</div>
+            <div>
+              <div class="font-bold text-sm" style="color:var(--bark);">Ananya R.</div>
+              <div class="text-xs" style="color:var(--muted);">2nd Year · CSE</div>
+            </div>
+            <span class="ml-auto text-sm">⭐⭐⭐⭐⭐</span>
+          </div>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">"I used to only sell during Blaze. Now I get 3–5 art print orders every week. CampusKala is my actual income as a student!"</p>
+        </div>
+
+        <div class="kala-card rounded-2xl p-7">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="avatar" style="background:#BBF7D0;color:#166534;font-size:1rem;">V</div>
+            <div>
+              <div class="font-bold text-sm" style="color:var(--bark);">Vikram S.</div>
+              <div class="text-xs" style="color:var(--muted);">3rd Year · ECE</div>
+            </div>
+            <span class="ml-auto text-sm">⭐⭐⭐⭐⭐</span>
+          </div>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">"Bought DS books for ₹250 instead of ₹800 at the bookstore. Found them from a 4th year in my own hostel block. 10/10!"</p>
+        </div>
+
+        <div class="kala-card rounded-2xl p-7">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="avatar" style="background:#DDD6FE;color:#5B21B6;font-size:1rem;">T</div>
+            <div>
+              <div class="font-bold text-sm" style="color:var(--bark);">Tanya M.</div>
+              <div class="text-xs" style="color:var(--muted);">1st Year · Biotech</div>
+            </div>
+            <span class="ml-auto text-sm">⭐⭐⭐⭐⭐</span>
+          </div>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">"Got Python tutoring sessions from a final year senior at half the coaching class rate. He's been more helpful than the prof honestly 😅"</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       CONTACT / JOIN WAITLIST
+  ══════════════════════════════════ -->
+  <section id="contact" class="py-24 px-5 sm:px-8 alt-bg relative z-10">
+    <div class="max-w-2xl mx-auto">
+
+      <div class="text-center mb-10">
+        <span class="section-label">Get Early Access</span>
+        <h2 class="mt-3 mb-3" style="font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.8rem,4vw,2.8rem);color:var(--bark);">Join the Beta 🎉</h2>
+        <p class="text-base" style="color:var(--muted);">CampusKala is launching exclusively at Christ University. Be among the first 100 students to join — as a buyer, seller, or both.</p>
+      </div>
+
+      <div class="kala-card rounded-2xl p-8">
+        <form id="join-form" onsubmit="handleJoin(event)" class="space-y-5">
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold mb-2" style="color:var(--muted);font-family:'JetBrains Mono',monospace;">Full Name</label>
+              <input type="text" required placeholder="Your Name" class="kala-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-2" style="color:var(--muted);font-family:'JetBrains Mono',monospace;">Register Number</label>
+              <input type="text" required placeholder="CHR..." class="kala-input" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold mb-2" style="color:var(--muted);font-family:'JetBrains Mono',monospace;">College Email (.christuniversity.in)</label>
+            <input type="email" required placeholder="yourname@christuniversity.in" class="kala-input" />
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold mb-2" style="color:var(--muted);font-family:'JetBrains Mono',monospace;">Department</label>
+              <select class="kala-input" style="cursor:pointer;">
+                <option value="">Select Department</option>
+                <option>CSE</option><option>ECE</option><option>IT</option><option>Mechanical</option><option>Civil</option><option>Biotech</option><option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-2" style="color:var(--muted);font-family:'JetBrains Mono',monospace;">Year</label>
+              <select class="kala-input" style="cursor:pointer;">
+                <option value="">Select Year</option>
+                <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold mb-2" style="color:var(--muted);font-family:'JetBrains Mono',monospace;">I Want To</label>
+            <div class="flex flex-wrap gap-3">
+              <label class="flex items-center gap-2 cursor-pointer text-sm font-semibold" style="color:var(--charcoal);">
+                <input type="checkbox" class="accent-orange-500 w-4 h-4" /> Buy Products &amp; Services
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer text-sm font-semibold" style="color:var(--charcoal);">
+                <input type="checkbox" class="accent-orange-500 w-4 h-4" /> Sell / Start a Shop
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer text-sm font-semibold" style="color:var(--charcoal);">
+                <input type="checkbox" class="accent-orange-500 w-4 h-4" /> Both!
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary w-full justify-center text-base py-3.5">
+            Join the Beta Waitlist 🚀
+          </button>
+
+          <p id="join-success" class="hidden text-center text-sm font-semibold" style="color:var(--forest);">
+            ✅ You're on the list! We'll reach out to your Christ University email within 48 hours.
+          </p>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       FOOTER
+  ══════════════════════════════════ -->
+  <footer class="relative z-10 dark-section pt-16 pb-8 px-5 sm:px-8">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="grid sm:grid-cols-4 gap-10 mb-12">
+
+        <!-- Brand -->
+        <div class="sm:col-span-2">
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center text-xl" style="background:linear-gradient(135deg,#F97316,#FBBF24);">🪔</div>
+            <span style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.2rem;color:var(--cream);">Campus<span style="color:var(--marigold);">Kala</span></span>
+          </div>
+          <p class="text-sm leading-relaxed max-w-sm" style="color:rgba(255,251,240,0.50);">
+            The student-only marketplace built for Christ University. Empowering student entrepreneurs to run their businesses 365 days a year — not just during fests.
+          </p>
+          <div class="flex gap-3 mt-5">
+            <a href="#" class="w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-colors hover:bg-orange-500/20" style="background:rgba(255,251,240,0.07);color:rgba(255,251,240,0.6);">ig</a>
+            <a href="#" class="w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-colors hover:bg-orange-500/20" style="background:rgba(255,251,240,0.07);color:rgba(255,251,240,0.6);">in</a>
+            <a href="#" class="w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-colors hover:bg-orange-500/20" style="background:rgba(255,251,240,0.07);color:rgba(255,251,240,0.6);">wa</a>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div>
+          <h4 class="text-xs font-mono mb-4 tracking-widest uppercase" style="color:rgba(255,251,240,0.35);">Platform</h4>
+          <ul class="space-y-2.5 text-sm" style="color:rgba(255,251,240,0.55);">
+            <li><a href="#how"       class="hover:text-orange-400 transition-colors">How It Works</a></li>
+            <li><a href="#listings"  class="hover:text-orange-400 transition-colors">Browse Market</a></li>
+            <li><a href="#sellers"   class="hover:text-orange-400 transition-colors">Start Selling</a></li>
+            <li><a href="#community" class="hover:text-orange-400 transition-colors">Community</a></li>
+            <li><a href="#contact"   class="hover:text-orange-400 transition-colors">Join Beta</a></li>
+          </ul>
+        </div>
+
+        <!-- Categories -->
+        <div>
+          <h4 class="text-xs font-mono mb-4 tracking-widest uppercase" style="color:rgba(255,251,240,0.35);">Categories</h4>
+          <ul class="space-y-2.5 text-sm" style="color:rgba(255,251,240,0.55);">
+            <li><a href="#" class="hover:text-orange-400 transition-colors">📦 Products</a></li>
+            <li><a href="#" class="hover:text-orange-400 transition-colors">🔧 Services</a></li>
+            <li><a href="#" class="hover:text-orange-400 transition-colors">📚 Books &amp; Notes</a></li>
+            <li><a href="#" class="hover:text-orange-400 transition-colors">🎨 Handmade</a></li>
+            <li><a href="#" class="hover:text-orange-400 transition-colors">🍕 Food &amp; Drinks</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="divider mb-6"></div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs" style="color:rgba(255,251,240,0.30);">
+        <span>© 2025 CampusKala — Built by students, for students · Christ University</span>
+        <span style="font-family:'JetBrains Mono',monospace;">v1.0-beta · Exclusively CHRIST</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ══════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════ -->
+  <script>
+    /* Mobile menu */
+    const menuBtn  = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    function closeMobileMenu() { mobileMenu.classList.add('hidden'); }
+
+    /* Smooth scroll with offset */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (!target) return;
+        e.preventDefault();
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' });
+      });
+    });
+
+    /* Category filter buttons */
+    document.querySelectorAll('[data-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    /* Join form */
+    function handleJoin(e) {
+      e.preventDefault();
+      const msg = document.getElementById('join-success');
+      msg.classList.remove('hidden');
+      e.target.reset();
+      setTimeout(() => msg.classList.add('hidden'), 6000);
+    }
+
+    /* Nav active state on scroll */
+    const sections = document.querySelectorAll('section[id]');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.nav-link').forEach(link => {
+            link.style.color = link.getAttribute('href') === '#' + entry.target.id
+              ? 'var(--saffron)' : '';
+          });
+        }
+      });
+    }, { threshold: 0.4 });
+    sections.forEach(s => observer.observe(s));
+
+    /* Category button toggle effect */
+    const catBtns = document.querySelectorAll('#listings .flex button');
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        catBtns.forEach(b => {
+          b.classList.remove('btn-primary');
+          b.classList.add('btn-secondary');
+          b.style.padding = '0.375rem 0.75rem';
+        });
+        btn.classList.remove('btn-secondary');
+        btn.classList.add('btn-primary');
+      });
+    });
+  </script>
+
+</body>
+</html>
