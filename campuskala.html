@@ -29,6 +29,13 @@
       color: var(--charcoal);
       overflow-x: hidden;
     }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 88px;
+    }
+    section {
+      scroll-margin-top: 88px;
+    }
     body::before {
       content: '';
       position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -41,6 +48,432 @@
         radial-gradient(ellipse 80% 70% at 50% 100%, rgba(22,163,74,0.10) 0%, transparent 60%),
         var(--cream);
     }
+    .hero-stage {
+      position: relative;
+      isolation: isolate;
+      --hero-x: 50%;
+      --hero-y: 45%;
+      min-height: calc(100vh - 96px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-pointer-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(circle 240px at var(--hero-x) var(--hero-y), rgba(249,115,22,0.14), transparent 68%);
+      mix-blend-mode: multiply;
+      opacity: 0.9;
+      transition: opacity 0.2s ease;
+    }
+    .hero-bg-video {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .hero-bg-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      opacity: 0.72;
+      filter: saturate(1.05) contrast(1.02) brightness(0.98);
+      transform: scale(1.03);
+    }
+    .hero-bg-video::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255,251,240,0.08) 0%, rgba(28,18,8,0.16) 40%, rgba(255,251,240,0.28) 100%),
+        linear-gradient(135deg, rgba(249,115,22,0.08), rgba(22,163,74,0.05));
+    }
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 35%, transparent 0 40%, rgba(255,251,240,0.10) 76%, rgba(255,251,240,0.38) 100%),
+        linear-gradient(180deg, rgba(255,251,240,0.04), rgba(255,251,240,0.14));
+    }
+    .hero-showcase { display: none; }
+    .hero-stage::before,
+    .hero-stage::after {
+      content: '';
+      position: absolute;
+      inset: auto;
+      border-radius: 999px;
+      filter: blur(6px);
+      pointer-events: none;
+    }
+    .hero-stage::before {
+      width: 260px;
+      height: 260px;
+      left: -40px;
+      top: 12%;
+      background: radial-gradient(circle, rgba(251,191,36,0.24), transparent 68%);
+      animation: none;
+      opacity: 0.45;
+    }
+    .hero-stage::after {
+      width: 340px;
+      height: 340px;
+      right: -50px;
+      bottom: 4%;
+      background: radial-gradient(circle, rgba(249,115,22,0.18), transparent 70%);
+      animation: none;
+      opacity: 0.35;
+    }
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      max-width: none;
+      margin: 0;
+      text-align: left;
+    }
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.55rem, 5.6vw, 4.4rem);
+      line-height: 0.9;
+      color: var(--bark);
+      letter-spacing: -0.04em;
+    }
+    .hero-title-sub {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.34em;
+      line-height: 1;
+      color: var(--saffron);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .hero-showcase {
+      display: none;
+      position: relative;
+      z-index: 2;
+      perspective: 1200px;
+    }
+    .hero-stage > .grid {
+      display: block;
+    }
+    .hero-stage > .grid > .hero-copy {
+      width: min(100%, 760px);
+      max-width: none;
+      text-align: left;
+      margin: 0;
+      background: rgba(255,251,240,0.44);
+      border: 1px solid rgba(249,115,22,0.12);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 32px;
+      padding: clamp(1.6rem, 3vw, 2.6rem);
+      box-shadow: 0 24px 72px rgba(28,18,8,0.10);
+    }
+    .hero-card-shell {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,248,238,0.90)),
+        var(--card-bg);
+      border: 1px solid rgba(249,115,22,0.18);
+      box-shadow: 0 24px 60px rgba(28,18,8,0.12);
+      backdrop-filter: blur(18px);
+      transform: translateY(0);
+    }
+    .hero-card-shell::before {
+      content: '';
+      position: absolute;
+      inset: -40%;
+      background: linear-gradient(120deg, transparent 38%, rgba(255,255,255,0.55) 50%, transparent 62%);
+      transform: translateX(-45%) rotate(10deg);
+      animation: hero-sheen 8s linear infinite;
+      pointer-events: none;
+    }
+    .hero-art {
+      position: relative;
+      min-height: 430px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(251,191,36,0.12), transparent 30%),
+        radial-gradient(circle at 80% 75%, rgba(22,163,74,0.10), transparent 28%),
+        linear-gradient(180deg, #FFF9EF 0%, #FFF1DA 100%);
+    }
+    .hero-video-shell {
+      position: relative;
+      margin: 18px;
+      border-radius: 24px;
+      overflow: hidden;
+      min-height: 420px;
+      background: linear-gradient(180deg, rgba(28,18,8,0.92), rgba(28,18,8,0.76));
+      border: 1px solid rgba(249,115,22,0.12);
+    }
+    .hero-video-shell video {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      object-fit: cover;
+      opacity: 0.52;
+      filter: saturate(0.95) contrast(0.92) brightness(1.08);
+      transform: scale(1.03);
+    }
+    .hero-video-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255,251,240,0.18) 0%, rgba(255,251,240,0.10) 28%, rgba(28,18,8,0.30) 100%),
+        linear-gradient(135deg, rgba(249,115,22,0.10), rgba(22,163,74,0.06));
+      pointer-events: none;
+    }
+    .hero-video-caption {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: end;
+      color: white;
+      z-index: 2;
+    }
+    .hero-video-caption .panel {
+      background: rgba(28,18,8,0.62);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 18px;
+      padding: 0.85rem 1rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.16);
+    }
+    .hero-video-caption .panel strong {
+      display: block;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+    .hero-video-caption .panel span {
+      font-size: 0.76rem;
+      color: rgba(255,251,240,0.76);
+    }
+    .hero-reveal {
+      opacity: 0;
+      transform: translateY(-22px);
+      clip-path: inset(0 0 100% 0);
+      animation: reveal-down 0.95s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+    .hero-reveal.delay-1 { animation-delay: 0.08s; }
+    .hero-reveal.delay-2 { animation-delay: 0.18s; }
+    .hero-reveal.delay-3 { animation-delay: 0.28s; }
+    .hero-reveal.delay-4 { animation-delay: 0.38s; }
+    .hero-reveal.delay-5 { animation-delay: 0.48s; }
+    @keyframes reveal-down {
+      from { opacity: 0; transform: translateY(-22px); clip-path: inset(0 0 100% 0); }
+      to { opacity: 1; transform: translateY(0); clip-path: inset(0 0 0 0); }
+    }
+    .confetti-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1000;
+      overflow: hidden;
+    }
+    .sparkle-piece {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      will-change: transform, opacity;
+      animation: sparkle-fade 1s ease-out forwards;
+      box-shadow: 0 0 18px currentColor;
+    }
+    .sparkle-star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      color: var(--marigold);
+      animation: sparkle-fade 1.1s ease-out forwards;
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+    .sparkle-star::before,
+    .sparkle-star::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      background: currentColor;
+      border-radius: 999px;
+    }
+    .sparkle-star::before { width: 100%; height: 2px; top: 4px; }
+    .sparkle-star::after { width: 2px; height: 100%; left: 4px; }
+    @keyframes sparkle-fade {
+      0% { opacity: 0; transform: translate3d(0,0,0) scale(0.4) rotate(0deg); }
+      15% { opacity: 1; }
+      100% { opacity: 0; transform: translate3d(var(--dx), var(--dy), 0) scale(1.15) rotate(var(--rot)); }
+    }
+    .hero-mini-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+      max-width: none;
+    }
+    .hero-mini-title {
+      margin-top: 0.5rem;
+      font-weight: 800;
+      color: var(--bark);
+    }
+    .hero-mini-text {
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .hero-metric {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.9rem 1rem;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.76);
+      border: 1px solid rgba(249,115,22,0.12);
+      box-shadow: 0 10px 24px rgba(28,18,8,0.05);
+      margin-top: 14px;
+    }
+    .hero-metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+      max-width: none;
+    }
+    .hero-mini,
+    .hero-metric {
+      border-radius: 20px;
+    }
+    .hero-metric .ring {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 900;
+      background: linear-gradient(135deg, rgba(249,115,22,0.95), rgba(251,191,36,0.92));
+      color: white;
+    }
+    .hero-metric .copy strong {
+      display: block;
+      color: var(--bark);
+      font-size: 0.92rem;
+    }
+    .hero-metric .copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+    @media (max-width: 1024px) {
+      .hero-mini-row { grid-template-columns: 1fr; }
+      .hero-metric-row { grid-template-columns: 1fr; }
+      .hero-video-caption { flex-direction: column; align-items: start; }
+    }
+    .hero-floating-chip {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.55rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid rgba(249,115,22,0.14);
+      box-shadow: 0 10px 24px rgba(28,18,8,0.08);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      animation: float 5.5s ease-in-out infinite;
+      backdrop-filter: blur(10px);
+    }
+    .hero-floating-chip.small { font-size: 0.7rem; padding: 0.45rem 0.7rem; }
+    .hero-floating-chip.chip-1 { top: 22px; left: 18px; animation-delay: 0s; }
+    .hero-floating-chip.chip-2 { top: 64px; right: 22px; animation-delay: 0.8s; }
+    .hero-floating-chip.chip-3 { bottom: 24px; left: 26px; animation-delay: 1.2s; }
+    .hero-frame {
+      position: relative;
+      margin: 18px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(249,115,22,0.10);
+      overflow: hidden;
+    }
+    .hero-gridline {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(249,115,22,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(249,115,22,0.05) 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: 0.55;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent 92%);
+    }
+    .hero-stat-card {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.7rem 0.85rem;
+      border-radius: 18px;
+      background: rgba(28,18,8,0.92);
+      color: var(--cream);
+      box-shadow: 0 12px 32px rgba(28,18,8,0.16);
+    }
+    .hero-stat-bar {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(249,115,22,0.95), rgba(251,191,36,0.92));
+      color: white;
+      font-weight: 900;
+      font-family: 'Syne', sans-serif;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+    .hero-microgrid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .hero-mini {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(249,115,22,0.12);
+      border-radius: 18px;
+      padding: 0.9rem;
+      box-shadow: 0 10px 28px rgba(28,18,8,0.05);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .hero-mini:hover {
+      transform: translateY(-3px);
+      border-color: rgba(249,115,22,0.28);
+    }
+    .hero-mini-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    @keyframes drift-slow { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(18px,-14px,0); } }
+    @keyframes bob { 0%,100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(-0.4deg); } }
+    @keyframes hero-sheen { 0% { transform: translateX(-55%) rotate(10deg); } 100% { transform: translateX(55%) rotate(10deg); } }
     .nav-glass {
       background: rgba(255, 251, 240, 0.88);
       backdrop-filter: blur(14px);
@@ -64,6 +497,59 @@
       transform: translateY(-4px);
       box-shadow: 0 12px 40px rgba(249,115,22,0.12), 0 2px 8px rgba(0,0,0,0.06);
       border-color: rgba(249,115,22,0.35);
+    }
+    .spotlight-card {
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      --spot-x: 50%;
+      --spot-y: 50%;
+      --rotate-x: 0deg;
+      --rotate-y: 0deg;
+      will-change: transform;
+    }
+    .spotlight-card::before,
+    .spotlight-card::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      pointer-events: none;
+      border-radius: inherit;
+      transition: opacity 0.25s ease, transform 0.35s ease;
+    }
+    .spotlight-card::before {
+      background:
+        radial-gradient(220px circle at var(--spot-x) var(--spot-y), rgba(249,115,22,0.20), transparent 58%),
+        linear-gradient(135deg, rgba(255,255,255,0.36), transparent 46%);
+      opacity: 0;
+      mix-blend-mode: screen;
+    }
+    .spotlight-card::after {
+      background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.38) 50%, transparent 70%);
+      transform: translateX(-55%) rotate(8deg);
+      opacity: 0;
+    }
+    .spotlight-card:hover {
+      transform: translateY(-8px) rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) scale(1.015);
+      box-shadow: 0 18px 48px rgba(249,115,22,0.16), 0 8px 24px rgba(0,0,0,0.08);
+      border-color: rgba(249,115,22,0.38);
+    }
+    .spotlight-card:hover::before { opacity: 1; }
+    .spotlight-card:hover::after {
+      opacity: 1;
+      transform: translateX(55%) rotate(8deg);
+    }
+    .spotlight-card > * {
+      position: relative;
+      z-index: 1;
+    }
+    .spotlight-card .product-img {
+      transition: transform 0.35s ease, filter 0.35s ease;
+    }
+    .spotlight-card:hover .product-img {
+      transform: scale(1.06) rotate(-1deg);
+      filter: saturate(1.08);
     }
     .tag { background: rgba(249,115,22,0.10); border: 1px solid rgba(249,115,22,0.25); color: var(--saffron); }
     .tag-green { background: rgba(22,163,74,0.10); border: 1px solid rgba(22,163,74,0.25); color: var(--forest); }
@@ -205,6 +691,8 @@
 </head>
 <body>
 
+  <div id="confetti-layer" class="confetti-layer"></div>
+
   <!-- Notification Toast -->
   <div id="notif-toast">
     <span id="notif-icon">🔔</span>
@@ -267,54 +755,44 @@
        HERO
   ══════════════════════════════════ -->
   <section class="hero-bg min-h-screen flex items-center justify-center pt-16 pb-16 px-5 sm:px-8 relative overflow-hidden" id="hero">
-    <div class="absolute top-28 right-12 float text-5xl opacity-60 pointer-events-none select-none hidden lg:block">🎨</div>
-    <div class="absolute top-48 left-8 float-2 text-4xl opacity-50 pointer-events-none select-none hidden lg:block">☕</div>
-    <div class="absolute bottom-32 right-24 float-3 text-5xl opacity-55 pointer-events-none select-none hidden lg:block">📚</div>
-    <div class="absolute bottom-24 left-16 float text-3xl opacity-45 pointer-events-none select-none hidden lg:block">🧵</div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none opacity-[0.035] spin-slow hidden lg:block">
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="100,10 120,80 190,80 135,120 155,190 100,150 45,190 65,120 10,80 80,80" fill="none" stroke="#F97316" stroke-width="1.5"/>
-        <circle cx="100" cy="100" r="85" fill="none" stroke="#FBBF24" stroke-width="0.8" stroke-dasharray="6 4"/>
-        <circle cx="100" cy="100" r="50" fill="none" stroke="#16A34A" stroke-width="0.6" stroke-dasharray="3 6"/>
-      </svg>
+    <div class="hero-bg-video">
+      <video id="hero-video" autoplay muted loop playsinline preload="metadata" poster="">
+        <source src="./VID-20260620-WA0004%20(1).mp4" type="video/mp4" />
+      </video>
     </div>
-    <div class="max-w-5xl w-full text-center relative z-10">
-      <div class="animate-fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-xs font-semibold" style="background:white;border:1px solid rgba(249,115,22,0.2);color:var(--muted);box-shadow:0 2px 12px rgba(249,115,22,0.08);">
-        <span>🏛️</span>
-        <span style="color:var(--charcoal);">Exclusive to</span>
-        <span style="color:var(--saffron);font-family:'Syne',sans-serif;">Christ University</span>
-        <span class="badge-live"><span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span> Open</span>
-      </div>
-      <h1 class="animate-fade-up delay-1 mb-5 leading-tight" style="font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(2.8rem,8vw,5.5rem);color:var(--bark);">
-        Your Campus Bazaar,<br/>
-        <span style="color:var(--saffron);">Open 365 Days</span> 🪔
-      </h1>
-      <p class="animate-fade-up delay-2 mb-10 text-lg leading-relaxed max-w-2xl mx-auto" style="color:var(--muted);">
-        CampusKala connects student-led businesses with their university community. From handmade crafts and vintage books to tutoring and design services — the college stall experience, but always on.
-      </p>
-      <div class="animate-fade-up delay-3 flex flex-wrap gap-3 justify-center mb-12">
-        <a href="#listings" class="btn-primary">Explore the Market 🛒</a>
-        <a href="#sellers" class="btn-secondary">I Want to Sell ✨</a>
-      </div>
-      <div class="animate-fade-up delay-4 flex flex-wrap justify-center gap-6 sm:gap-10">
-        <div class="text-center">
-          <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;color:var(--saffron);">200+</div>
-          <div class="text-xs font-semibold" style="color:var(--muted);">Active Sellers</div>
-        </div>
-        <div style="width:1px;background:rgba(249,115,22,0.18);" class="hidden sm:block"></div>
-        <div class="text-center">
-          <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;color:var(--saffron);">1,400+</div>
-          <div class="text-xs font-semibold" style="color:var(--muted);">Listings Live</div>
-        </div>
-        <div style="width:1px;background:rgba(249,115,22,0.18);" class="hidden sm:block"></div>
-        <div class="text-center">
-          <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;color:var(--forest);">100%</div>
-          <div class="text-xs font-semibold" style="color:var(--muted);">Student-to-Student</div>
-        </div>
-        <div style="width:1px;background:rgba(249,115,22,0.18);" class="hidden sm:block"></div>
-        <div class="text-center">
-          <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;color:var(--saffron);">0%</div>
-          <div class="text-xs font-semibold" style="color:var(--muted);">Platform Fee</div>
+    <div class="hero-vignette"></div>
+    <div class="hero-stage max-w-7xl w-full relative z-10">
+      <div class="hero-pointer-glow"></div>
+      <div class="grid items-center">
+        <div class="hero-copy text-left max-w-2xl mx-0">
+          <h1 class="hero-reveal delay-1 mb-5 hero-title">
+            Your Campus Bazaar,<br/>
+            <span class="hero-title-sub">Open 365 Days</span>
+          </h1>
+          <p class="hero-reveal delay-2 mb-8 text-base sm:text-lg leading-relaxed max-w-xl mx-auto" style="color:var(--muted);">
+            CampusKala turns the campus into a living marketplace. Students can discover handmade goods, study resources, food, tutoring, and services without leaving the university circle.
+          </p>
+          <div class="hero-reveal delay-3 flex flex-wrap gap-3 justify-start mb-10">
+            <a href="#listings" class="btn-primary">Explore the Market 🛍️</a>
+            <a href="#sellers" class="btn-secondary">I Want to Sell ✨</a>
+          </div>
+          <div class="hero-reveal delay-4 hero-mini-row">
+            <div class="hero-mini">
+              <div class="hero-mini-label">Browse</div>
+              <div class="mt-2 font-bold" style="color:var(--bark);">Search by category</div>
+              <div class="text-xs mt-1" style="color:var(--muted);">Quick filters for products, notes, food, and services.</div>
+            </div>
+            <div class="hero-mini">
+              <div class="hero-mini-label">Save</div>
+              <div class="mt-2 font-bold" style="color:var(--bark);">Wishlist items</div>
+              <div class="text-xs mt-1" style="color:var(--muted);">Tap the heart to keep interesting listings.</div>
+            </div>
+            <div class="hero-mini">
+              <div class="hero-mini-label">Sell</div>
+              <div class="mt-2 font-bold" style="color:var(--bark);">Post in minutes</div>
+              <div class="text-xs mt-1" style="color:var(--muted);">Simple front-end form with validation and preview.</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -465,7 +943,7 @@
     <!-- Product grid -->
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="products-grid">
 
-      <div class="kala-card rounded-2xl p-5 cursor-pointer" data-category="handmade" data-title="Mandala Art Print">
+      <div class="kala-card spotlight-card rounded-2xl p-5 cursor-pointer" data-category="handmade" data-title="Mandala Art Print">
         <div class="product-img" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">🎨</div>
         <div class="flex gap-2 flex-wrap mb-2 justify-between">
           <div class="flex gap-2 flex-wrap">
@@ -485,7 +963,7 @@
         </div>
       </div>
 
-      <div class="kala-card rounded-2xl p-5 cursor-pointer" data-category="book" data-title="DS Algorithms Book">
+      <div class="kala-card spotlight-card rounded-2xl p-5 cursor-pointer" data-category="book" data-title="DS Algorithms Book">
         <div class="product-img" style="background:linear-gradient(135deg,#DCFCE7,#BBF7D0);">📚</div>
         <div class="flex gap-2 flex-wrap mb-2 justify-between">
           <div class="flex gap-2 flex-wrap">
@@ -505,7 +983,7 @@
         </div>
       </div>
 
-      <div class="kala-card rounded-2xl p-5 cursor-pointer" data-category="food" data-title="Home Baked Brownies">
+      <div class="kala-card spotlight-card rounded-2xl p-5 cursor-pointer" data-category="food" data-title="Home Baked Brownies">
         <div class="product-img" style="background:linear-gradient(135deg,#FEE2E2,#FECACA);">🧁</div>
         <div class="flex gap-2 flex-wrap mb-2 justify-between">
           <div class="flex gap-2 flex-wrap">
@@ -525,7 +1003,7 @@
         </div>
       </div>
 
-      <div class="kala-card rounded-2xl p-5 cursor-pointer" data-category="tutoring" data-title="Python ML Tutoring">
+      <div class="kala-card spotlight-card rounded-2xl p-5 cursor-pointer" data-category="tutoring" data-title="Python ML Tutoring">
         <div class="product-img" style="background:linear-gradient(135deg,#EDE9FE,#DDD6FE);">💡</div>
         <div class="flex gap-2 flex-wrap mb-2 justify-between">
           <div class="flex gap-2 flex-wrap">
@@ -545,7 +1023,7 @@
         </div>
       </div>
 
-      <div class="kala-card rounded-2xl p-5 cursor-pointer" data-category="service" data-title="Event Photography">
+      <div class="kala-card spotlight-card rounded-2xl p-5 cursor-pointer" data-category="service" data-title="Event Photography">
         <div class="product-img" style="background:linear-gradient(135deg,#E0F2FE,#BAE6FD);">📷</div>
         <div class="flex gap-2 flex-wrap mb-2 justify-between">
           <div class="flex gap-2 flex-wrap">
@@ -565,7 +1043,7 @@
         </div>
       </div>
 
-      <div class="kala-card rounded-2xl p-5 cursor-pointer" data-category="handmade" data-title="Crochet Keychains">
+      <div class="kala-card spotlight-card rounded-2xl p-5 cursor-pointer" data-category="handmade" data-title="Crochet Keychains">
         <div class="product-img" style="background:linear-gradient(135deg,#FEF9C3,#FEF08A);">🧶</div>
         <div class="flex gap-2 flex-wrap mb-2 justify-between">
           <div class="flex gap-2 flex-wrap">
@@ -585,7 +1063,7 @@
         </div>
       </div>
 
-      <div class="kala-card rounded-2xl p-5 cursor-pointer" data-category="product" data-title="Desk Succulents Plants">
+      <div class="kala-card spotlight-card rounded-2xl p-5 cursor-pointer" data-category="product" data-title="Desk Succulents Plants">
         <div class="product-img" style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7);">🌿</div>
         <div class="flex gap-2 flex-wrap mb-2 justify-between">
           <div class="flex gap-2 flex-wrap">
@@ -605,7 +1083,7 @@
         </div>
       </div>
 
-      <div class="kala-card rounded-2xl p-5 cursor-pointer" data-category="service" data-title="Logo UI Design Clubs">
+      <div class="kala-card spotlight-card rounded-2xl p-5 cursor-pointer" data-category="service" data-title="Logo UI Design Clubs">
         <div class="product-img" style="background:linear-gradient(135deg,#FDF2F8,#FCE7F3);">🖥️</div>
         <div class="flex gap-2 flex-wrap mb-2 justify-between">
           <div class="flex gap-2 flex-wrap">
@@ -1118,6 +1596,102 @@ function startSearch() {
   r.start();
 }
 
+function initHeroMotion() {
+  const hero = document.getElementById('hero');
+  if (!hero) return;
+
+  hero.addEventListener('pointermove', (e) => {
+    const rect = hero.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    hero.style.setProperty('--hero-x', `${x}%`);
+    hero.style.setProperty('--hero-y', `${y}%`);
+  });
+
+  hero.addEventListener('pointerleave', () => {
+    hero.style.setProperty('--hero-x', '50%');
+    hero.style.setProperty('--hero-y', '45%');
+  });
+}
+
+let heroSparkleLast = 0;
+function initHeroSparkles() {
+  const hero = document.getElementById('hero');
+  const layer = document.getElementById('confetti-layer');
+  if (!hero || !layer) return;
+
+  const createSparkle = (x, y, strong = false) => {
+    const colors = ['#F97316', '#FBBF24', '#16A34A', '#FFF8DC'];
+    const pieces = strong ? 6 : 3;
+    for (let i = 0; i < pieces; i++) {
+      const piece = document.createElement('span');
+      const isStar = i % 2 === 0;
+      piece.className = isStar ? 'sparkle-star' : 'sparkle-piece';
+      const color = colors[(Math.floor(Math.random() * colors.length))];
+      const angle = Math.random() * Math.PI * 2;
+      const distance = strong ? (35 + Math.random() * 100) : (12 + Math.random() * 36);
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance - (strong ? 18 : 6);
+      const rot = `${(Math.random() * 360).toFixed(0)}deg`;
+      piece.style.left = `${x}px`;
+      piece.style.top = `${y}px`;
+      piece.style.color = color;
+      piece.style.background = color;
+      piece.style.setProperty('--dx', `${dx.toFixed(1)}px`);
+      piece.style.setProperty('--dy', `${dy.toFixed(1)}px`);
+      piece.style.setProperty('--rot', rot);
+      piece.style.opacity = strong ? '1' : '0.85';
+      piece.style.width = isStar ? (strong ? '12px' : '10px') : (strong ? '8px' : '6px');
+      piece.style.height = isStar ? (strong ? '12px' : '10px') : (strong ? '8px' : '6px');
+      layer.appendChild(piece);
+      window.setTimeout(() => piece.remove(), 1050);
+    }
+  };
+
+  const onMove = (e) => {
+    const now = Date.now();
+    if (now - heroSparkleLast < 55) return;
+    heroSparkleLast = now;
+    const rect = hero.getBoundingClientRect();
+    if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+    createSparkle(e.clientX, e.clientY, true);
+  };
+
+  hero.addEventListener('pointermove', onMove, { passive: true });
+  hero.addEventListener('pointerleave', () => {
+    heroSparkleLast = 0;
+  });
+}
+
+function initSpotlightCards() {
+  const cards = document.querySelectorAll('#products-grid .spotlight-card');
+  cards.forEach(card => {
+    const reset = () => {
+      card.style.setProperty('--spot-x', '50%');
+      card.style.setProperty('--spot-y', '50%');
+      card.style.setProperty('--rotate-x', '0deg');
+      card.style.setProperty('--rotate-y', '0deg');
+    };
+
+    card.addEventListener('pointermove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const px = ((e.clientX - rect.left) / rect.width) * 100;
+      const py = ((e.clientY - rect.top) / rect.height) * 100;
+      const tiltX = ((py - 50) / 50) * -6;
+      const tiltY = ((px - 50) / 50) * 6;
+
+      card.style.setProperty('--spot-x', `${px}%`);
+      card.style.setProperty('--spot-y', `${py}%`);
+      card.style.setProperty('--rotate-x', `${tiltX.toFixed(2)}deg`);
+      card.style.setProperty('--rotate-y', `${tiltY.toFixed(2)}deg`);
+    });
+
+    card.addEventListener('pointerleave', reset);
+    card.addEventListener('blur', reset);
+    reset();
+  });
+}
+
 /* ═══════════════════════════════════════
    Seller tools: Drag & Drop
    Image upload preview for sellers
@@ -1236,6 +1810,19 @@ function showToast(icon, text) {
 }
 function hideToast() { document.getElementById('notif-toast').classList.remove('show'); }
 
+function initHeroVideo() {
+  const heroVideo = document.getElementById('hero-video');
+  if (!heroVideo) return;
+
+  const setSlowPlayback = () => {
+    heroVideo.playbackRate = 0.75;
+  };
+
+  heroVideo.addEventListener('loadedmetadata', setSlowPlayback, { once: true });
+  heroVideo.addEventListener('canplay', setSlowPlayback, { once: true });
+  setSlowPlayback();
+}
+
 /* ═══════════════════════════════════════
    NAV SCROLL ACTIVE STATE
 ═══════════════════════════════════════ */
@@ -1257,6 +1844,10 @@ sections.forEach(s => observer.observe(s));
 window.addEventListener('DOMContentLoaded', () => {
   // Draw canvas
   redrawCanvas();
+  initHeroMotion();
+  initHeroVideo();
+  initHeroSparkles();
+  initSpotlightCards();
 
   // Restore localStorage state
   updateSavedUI();
