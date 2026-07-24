@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "username": "alice_user",
+    "password": "$2a$10$w.yAxNP28.mQGExWV8z.WOl5AZfDerffTwhk4/8BXK24ICoa5tS5i",
+    "role": "user",
+    "createdAt": "2026-07-04T03:11:44.904Z"
+  },
+  {
+    "id": 2,
+    "username": "bob_mod",
+    "password": "$2a$10$PXg4AQevpsW.YLtjZtccVunZktXQARPdM6KeKGS4EizTIAWvVmIlG",
+    "role": "moderator",
+    "createdAt": "2026-07-04T03:11:45.102Z"
+  },
+  {
+    "id": 3,
+    "username": "clara_admin",
+    "password": "$2a$10$SgXF5AA/UmABbiBXKU96juaVv0RVpeVmihUjy.HsqNcziJGP74RZG",
+    "role": "admin",
+    "createdAt": "2026-07-04T03:11:45.272Z"
+  }
+]

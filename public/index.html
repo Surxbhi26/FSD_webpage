@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GuardRoot - Secure Role-Based Authentication</title>
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Animated Background Gradients -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Main App Container -->
+  <div class="app-container">
+    
+    <!-- Header/Navigation Bar -->
+    <header class="navbar">
+      <div class="logo">
+        <i class="fa-solid fa-shield-halved logo-icon"></i>
+        <span class="logo-text">Guard<span>Root</span></span>
+      </div>
+      <div id="nav-user-info" class="nav-user-info hidden">
+        <div class="user-avatar">
+          <i class="fa-solid fa-user-astronaut"></i>
+        </div>
+        <div class="user-details">
+          <span id="nav-username" class="username">Guest</span>
+          <span id="nav-role-badge" class="role-badge role-user">Guest</span>
+        </div>
+        <button id="btn-logout" class="btn-secondary" title="Logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Sections -->
+    <main class="main-content">
+      
+      <!-- AUTHENTICATION CARD (Login & Registration) -->
+      <section id="auth-section" class="auth-section">
+        <div class="glass-card auth-card">
+          <!-- Auth Tabs -->
+          <div class="auth-tabs">
+            <button id="tab-login" class="auth-tab active">Sign In</button>
+            <button id="tab-register" class="auth-tab">Sign Up</button>
+          </div>
+
+          <!-- Login Form Container -->
+          <div id="login-container" class="form-container">
+            <h2 class="form-title">Welcome Back</h2>
+            <p class="form-subtitle">Enter your credentials to access your dashboard</p>
+            
+            <form id="form-login" novalidate>
+              <div class="input-group">
+                <label for="login-username">Username</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-user input-icon"></i>
+                  <input type="text" id="login-username" placeholder="Enter username" required autocomplete="username">
+                </div>
+              </div>
+              
+              <div class="input-group">
+                <label for="login-password">Password</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-lock input-icon"></i>
+                  <input type="password" id="login-password" placeholder="Enter password" required autocomplete="current-password">
+                  <i class="fa-solid fa-eye-slash toggle-password" id="toggle-login-pass"></i>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary">
+                <span>Sign In</span>
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- Register Form Container -->
+          <div id="register-container" class="form-container hidden">
+            <h2 class="form-title">Create Account</h2>
+            <p class="form-subtitle">Register and choose a system role for verification</p>
+            
+            <form id="form-register" novalidate>
+              <div class="input-group">
+                <label for="register-username">Username</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-user input-icon"></i>
+                  <input type="text" id="register-username" placeholder="Choose a username" required autocomplete="username">
+                </div>
+              </div>
+              
+              <div class="input-group">
+                <label for="register-password">Password</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-lock input-icon"></i>
+                  <input type="password" id="register-password" placeholder="Min. 6 characters" required autocomplete="new-password">
+                  <i class="fa-solid fa-eye-slash toggle-password" id="toggle-register-pass"></i>
+                </div>
+              </div>
+
+              <!-- Role Selector badges -->
+              <div class="input-group">
+                <label>Select Workspace Role</label>
+                <div class="role-selector-group">
+                  <label class="role-option">
+                    <input type="radio" name="role" value="user" checked>
+                    <div class="role-card card-user">
+                      <i class="fa-solid fa-user-gear"></i>
+                      <span>User</span>
+                      <small>Standard access</small>
+                    </div>
+                  </label>
+                  
+                  <label class="role-option">
+                    <input type="radio" name="role" value="moderator">
+                    <div class="role-card card-moderator">
+                      <i class="fa-solid fa-user-shield"></i>
+                      <span>Moderator</span>
+                      <small>Review content</small>
+                    </div>
+                  </label>
+
+                  <label class="role-option">
+                    <input type="radio" name="role" value="admin">
+                    <div class="role-card card-admin">
+                      <i class="fa-solid fa-user-secret"></i>
+                      <span>Admin</span>
+                      <small>System owner</small>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary">
+                <span>Create Account</span>
+                <i class="fa-solid fa-user-plus"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- PORTALS & DASHBOARD SECTION -->
+      <section id="dashboard-section" class="dashboard-section hidden">
+        
+        <!-- Dashboard Navigation Layout (Grid) -->
+        <div class="dashboard-layout">
+          
+          <!-- Sidebar Navigation -->
+          <div class="glass-card sidebar">
+            <div class="sidebar-header">
+              <i class="fa-solid fa-cubes"></i>
+              <span>Portals</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+              <button class="nav-item active" data-portal="user">
+                <span class="nav-left">
+                  <i class="fa-solid fa-circle-nodes"></i>
+                  <span>User Portal</span>
+                </span>
+                <span class="nav-badge badge-green">Public</span>
+              </button>
+              
+              <button class="nav-item" data-portal="moderator" id="sidebar-nav-moderator">
+                <span class="nav-left">
+                  <i class="fa-solid fa-shield"></i>
+                  <span>Moderator Desk</span>
+                </span>
+                <span id="nav-badge-mod" class="nav-badge badge-blue">
+                  <i class="fa-solid fa-lock"></i>
+                </span>
+              </button>
+              
+              <button class="nav-item" data-portal="admin" id="sidebar-nav-admin">
+                <span class="nav-left">
+                  <i class="fa-solid fa-terminal"></i>
+                  <span>Admin Center</span>
+                </span>
+                <span id="nav-badge-admin" class="nav-badge badge-red">
+                  <i class="fa-solid fa-lock"></i>
+                </span>
+              </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+              <div class="session-timer">
+                <i class="fa-regular fa-clock"></i>
+                <span>Session Active (1h)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Dashboard Portal Frame -->
+          <div class="portal-frame-container">
+            
+            <!-- Dynamic Content Card -->
+            <div class="glass-card portal-card animate-fade-in">
+              
+              <!-- Tab Header / Status -->
+              <div class="portal-header">
+                <div class="portal-title-wrapper">
+                  <div class="portal-icon-box" id="portal-icon">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                  </div>
+                  <div>
+                    <h2 id="portal-title">User Portal</h2>
+                    <p id="portal-subtitle">Global user area & resource board</p>
+                  </div>
+                </div>
+                <div class="auth-status-chip">
+                  <span class="pulse-dot"></span>
+                  <span id="portal-status-text">Authenticated as User</span>
+                </div>
+              </div>
+
+              <!-- Main Dynamic Content -->
+              <div class="portal-body">
+                
+                <!-- Access Denied State (Default Hidden) -->
+                <div id="access-denied-view" class="error-view hidden animate-scale-up">
+                  <div class="error-icon">
+                    <i class="fa-solid fa-ban text-glow-red"></i>
+                  </div>
+                  <h3>Access Denied</h3>
+                  <p id="access-denied-message">You do not have the authorization credentials required to access this portal.</p>
+                  <div class="permission-hint">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Required Roles: <strong id="denied-required-roles">moderator, admin</strong>. Your current role: <strong id="denied-user-role">user</strong></span>
+                  </div>
+                </div>
+
+                <!-- Active Content View -->
+                <div id="portal-active-view" class="portal-active-view">
+                  <p id="portal-description" class="portal-description">
+                    Loading portal content...
+                  </p>
+
+                  <hr class="portal-divider">
+
+                  <!-- Dynamic Components go here based on Portal Selection -->
+                  <div id="portal-dynamic-content">
+                    
+                    <!-- USER PORTAL INNER VIEW -->
+                    <div id="view-user-details" class="inner-view">
+                      <div class="dashboard-grid">
+                        <div class="stat-card">
+                          <i class="fa-solid fa-calendar-check stat-icon color-green"></i>
+                          <div class="stat-details">
+                            <h4>Tasks Pending</h4>
+                            <p class="stat-value">4 Tasks</p>
+                          </div>
+                        </div>
+                        <div class="stat-card">
+                          <i class="fa-solid fa-bolt stat-icon color-yellow"></i>
+                          <div class="stat-details">
+                            <h4>Activity Score</h4>
+                            <p class="stat-value">98 pts</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="content-block">
+                        <h3>Your Workspace Actions</h3>
+                        <div class="action-buttons-list" id="user-actions">
+                          <!-- Filled dynamically -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- MODERATOR PORTAL INNER VIEW -->
+                    <div id="view-moderator-details" class="inner-view hidden">
+                      <div class="content-block">
+                        <h3>Pending Reports Queue</h3>
+                        <div class="reports-list">
+                          <div class="report-item">
+                            <div class="report-info">
+                              <span class="report-tag tag-high">High</span>
+                              <span class="report-subject">Spam link detected in public room</span>
+                            </div>
+                            <button class="btn-action btn-mod-action"><i class="fa-solid fa-check"></i> Resolve</button>
+                          </div>
+                          <div class="report-item">
+                            <div class="report-info">
+                              <span class="report-tag tag-med">Medium</span>
+                              <span class="report-subject">Duplicate post title by user "alex_m"</span>
+                            </div>
+                            <button class="btn-action btn-mod-action"><i class="fa-solid fa-check"></i> Resolve</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- ADMIN PORTAL INNER VIEW -->
+                    <div id="view-admin-details" class="inner-view hidden">
+                      <div class="admin-grid">
+                        <div class="stat-card">
+                          <i class="fa-solid fa-server stat-icon color-blue"></i>
+                          <div class="stat-details">
+                            <h4>Database Status</h4>
+                            <p class="stat-value" id="admin-db-status">Online</p>
+                          </div>
+                        </div>
+                        <div class="stat-card">
+                          <i class="fa-solid fa-heartbeat stat-icon color-red"></i>
+                          <div class="stat-details">
+                            <h4>Server Uptime</h4>
+                            <p class="stat-value" id="admin-uptime">0s</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="content-block">
+                        <h3>Registered User Database (Live Node DB)</h3>
+                        <div class="table-container">
+                          <table class="user-table">
+                            <thead>
+                              <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Assigned Role</th>
+                                <th>Registration Date</th>
+                              </tr>
+                            </thead>
+                            <tbody id="admin-users-table-body">
+                              <!-- Filled dynamically -->
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>© 2026 GuardRoot Authentication. Built using Node.js & Express.js. Verified secure.</p>
+    </footer>
+  </div>
+</body>
+</html>
